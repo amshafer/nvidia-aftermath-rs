@@ -71,7 +71,7 @@
 #ifdef __cplusplus
 #define GFSDK_AFTERMATH_DECLARE_ENUM(name) enum GFSDK_Aftermath_##name : uint32_t
 #else
-#define GFSDK_AFTERMATH_DECLARE_ENUM(name) typedef uint32_t GFSDK_Aftermath_Type_##name; enum
+#define GFSDK_AFTERMATH_DECLARE_ENUM(name) typedef uint32_t GFSDK_Aftermath_##name; enum
 #endif
 #define GFSDK_AFTERMATH_DECLARE_POINTER_MEMBER(type, name) union { type name; uint64_t ptr_align_##name; }
 #define GFSDK_AFTERMATH_DECLARE_BOOLEAN_MEMBER(name) union { bool name; uint32_t bool_align_##name; }

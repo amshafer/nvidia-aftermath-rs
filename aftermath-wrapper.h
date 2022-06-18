@@ -6,5 +6,6 @@
 #define AFTERMATH_WRAPPER_H
 
 #include <GFSDK_Aftermath.h>
+#include <GFSDK_Aftermath_GpuCrashDump.h>
 
 #endif
