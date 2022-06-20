@@ -9,6 +9,6 @@ license-file = "nsight-aftermath/LICENSE"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [build-dependencies]
-bindgen = "0.53.1"
+bindgen = "0.60.1"
 
 [dependencies]

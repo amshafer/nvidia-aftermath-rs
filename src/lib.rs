@@ -67,6 +67,8 @@ unsafe extern "C" fn CrashDumpDescriptionCallback(
 ) {
 }
 
+static data: u32 = 0;
+
 impl Aftermath {
     pub fn initialize() -> Result<Self, GFSDK_Aftermath_Result> {
         unsafe {
@@ -78,7 +80,7 @@ impl Aftermath {
                 Some(ShaderDebugInfoCallback), // Register callback for shader debug information.
                 Some(CrashDumpDescriptionCallback), // Register callback for GPU crash dump description.
                 None, // Register callback for resolving application-managed markers.
-                std::ptr::null_mut(), // Set the GpuCrashTracker object as user data for the above callbacks.
+                &data as *const _ as *mut std::os::raw::c_void, // Set the GpuCrashTracker object as user data for the above callbacks.
             );
 
             match res {
@@ -88,6 +90,33 @@ impl Aftermath {
                 _ => Err(res),
             }
         }
+    }
+
+    /// This is a handler for when a Device lost error is found. You call this and
+    /// this crate takes care of waiting for the dump to finish
+    pub fn wait_for_dump(&self) {
+        println!("------ NVIDIA Aftermath: Waiting for GPU Crashdump ------");
+        println!("...");
+
+        loop {
+            // Add a sleep so we give it a chance to work
+            std::thread::sleep(std::time::Duration::from_millis(100));
+
+            let mut status = GFSDK_Aftermath_CrashDump_Status_Unknown;
+
+            let res = unsafe { GFSDK_Aftermath_GetCrashDumpStatus(&mut status) };
+
+            println!("Crashdump result is {:?}", res);
+            println!("Crashdump status is {:?}", status);
+
+            if status == GFSDK_Aftermath_CrashDump_Status_Finished
+                || status == GFSDK_Aftermath_CrashDump_Status_CollectingDataFailed
+            {
+                break;
+            }
+        }
+
+        println!("------ NVIDIA Aftermath: Crashdump Complete ------");
     }
 }
 
